@@ -1,17 +1,24 @@
 import express from 'express';
 import morgan from 'morgan';
+import cookieParser from "cookie-parser";
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
 import dotenv from 'dotenv';
 import Message from '../schemas/messageModel.js';
+import cors from 'cors';
+import config from '../src/config.js';
 
 // Database
 import { getConnection } from "../database/database.js";
 
+// Routers
+import userRouter from "../routes/userRouter.js";
+import movieRouter from '../routes/movieRouter.js';
+
 
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = config.port || 3000;
 
 const app = express();
 const server = createServer(app);
@@ -26,8 +33,6 @@ io.on('connection', async (socket) => {     // Crea una conexion por cada client
 
   try {
     const results = await Message.find();
-
-    console.log(results);
 
     results.forEach(result => {
       socket.emit('chat message', result.content, result.user)
@@ -44,7 +49,6 @@ io.on('connection', async (socket) => {     // Crea una conexion por cada client
     //io.emit('chat message', msg);   // cuando uso io, hago un broadcast a todos los sockets abiertos
                                       // cuando uso socket.emit, envio el mensaje a el socket especifico
     const username = socket.handshake.auth.username ?? 'anonymous';
-    console.log(username);
 
     try {
       const message = new Message({
@@ -62,10 +66,14 @@ io.on('connection', async (socket) => {     // Crea una conexion por cada client
 });
 
 app.use(morgan('dev'));
+app.disable('x-powered-by');
+app.use(express.json());
+app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.sendFile(process.cwd() + '/client/index.html');
-});
+app.use(cors());
+
+app.use('/movies', movieRouter);
+app.use('/users', userRouter);
 
 server.listen(port, () => {
   console.log('Server running on port ' + port);

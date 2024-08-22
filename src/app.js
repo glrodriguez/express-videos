@@ -1,5 +1,5 @@
 import express from "express";
-import cors from 'cors';
+// import cors from 'cors';
 import movieRouter from "../routes/movieRouter.js";
 import { corsMiddleware } from "./cors.js";
 

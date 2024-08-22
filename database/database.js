@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import config from "../src/config.js";
 
 
 // Create the connection pool
@@ -7,7 +8,7 @@ let isConnected = false;
 async function connectToDatabase() {
   if (!isConnected) {
   try {
-    mongoose.connect(`mongodb://${process.env.HOST}:${process.env.DB_PORT}/`, { dbname: process.env.DATABASE });
+    mongoose.connect(`mongodb://${config.host}:${config.db_port}/`, { dbname: config.database });
     isConnected = true;
     console.log("Successfully connected to MongoDB");
   } catch (error) {
