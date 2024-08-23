@@ -79,7 +79,6 @@ app.use(morgan('dev'));
 app.disable('x-powered-by');
 app.use(express.json());
 app.use(cookieParser());
-
 app.use(cors());
 
 app.use('/movies', movieRouter);
