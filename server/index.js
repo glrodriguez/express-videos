@@ -7,6 +7,9 @@ import dotenv from 'dotenv';
 import Message from '../schemas/messageModel.js';
 import cors from 'cors';
 import config from '../src/config.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'node:path';
 
 // Database
 import { getConnection } from "../database/database.js";
@@ -64,6 +67,13 @@ io.on('connection', async (socket) => {     // Crea una conexion por cada client
     io.emit('chat message', msg, username)
   });
 });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log(__dirname);
+
+app.use(express.static(path.join(__dirname, 'client')));
 
 app.use(morgan('dev'));
 app.disable('x-powered-by');

@@ -45,7 +45,6 @@ export const login = async (req, res) => {
   }
 };
 
-//todo
 export const logout = async (req, res) => {
   res.clearCookie('access_token').json({ message: "Sesion cerrada" });
 };

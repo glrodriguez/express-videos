@@ -7,7 +7,7 @@ const userRouter = Router();
 
 userRouter.get('/', getUsers);
 userRouter.get('/:id', getUser);
-userRouter.get('/index/home', authMiddleware, getHome);
+userRouter.get('/index/home', /*authMiddleware,*/ getHome);
 
 userRouter.post('/', register);
 userRouter.post('/login', login);
